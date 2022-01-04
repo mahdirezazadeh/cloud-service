@@ -2,21 +2,28 @@ package ir.urmia.cloudservice.service.impl;
 
 import ir.urmia.cloudservice.base.service.impl.BaseServiceImpl;
 import ir.urmia.cloudservice.domain.DBFile;
+import ir.urmia.cloudservice.domain.User;
 import ir.urmia.cloudservice.exception.FileStorageException;
 import ir.urmia.cloudservice.exception.MyFileNotFoundException;
 import ir.urmia.cloudservice.repository.DBFileRepository;
 import ir.urmia.cloudservice.service.DBFileService;
+import ir.urmia.cloudservice.service.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class DBFileServiceImpl extends BaseServiceImpl<DBFile, Long, DBFileRepository> implements DBFileService {
-    public DBFileServiceImpl(DBFileRepository repository) {
+
+    private final UserService userService;
+
+    public DBFileServiceImpl(DBFileRepository repository, UserService userService) {
         super(repository);
+        this.userService = userService;
     }
 
     @Override
@@ -29,9 +36,12 @@ public class DBFileServiceImpl extends BaseServiceImpl<DBFile, Long, DBFileRepos
                 throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileName);
             }
 
-            DBFile dbFile = new DBFile(fileName, file.getContentType(), file.getBytes());
+            User user = null;
+            Optional<User> optionalUser = userService.findByUsername(username);
+            if (optionalUser.isPresent())
+                user = optionalUser.get();
 
-//            TODO set user to dbFile by username
+            DBFile dbFile = new DBFile(fileName, file.getContentType(), file.getBytes(), user);
 
             return repository.save(dbFile);
         } catch (IOException ex) {
