@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,16 +35,23 @@ public class FileController {
 
         DBFile dbFile = fileService.storeFile(file, username);
 
+        return getUploadFileResponse(dbFile);
+    }
+
+    private UploadFileResponse getUploadFileResponse(DBFile dbFile) {
+        return new UploadFileResponse(dbFile.getFileName(), getFileDownloadUri(dbFile),
+                dbFile.getFileType(), dbFile.getSize());
+    }
+
+    private String getFileDownloadUri(DBFile dbFile) {
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/downloadFile/")
                 .path(String.valueOf(dbFile.getId()))
                 .toUriString();
-
-        return new UploadFileResponse(dbFile.getFileName(), fileDownloadUri,
-                file.getContentType(), file.getSize());
+        return fileDownloadUri;
     }
 
-    //    @PreAuthorize("hasRole('USER')")
+
     @PostMapping("/uploadMultipleFiles")
     public List<UploadFileResponse> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files) {
         return Arrays.stream(files)
@@ -53,9 +59,9 @@ public class FileController {
                 .collect(Collectors.toList());
     }
 
-    //    @RequestMapping(method = RequestMethod.PUT, value = "/downloadFile/{fileName:.+}")
+
     @GetMapping(value = "/downloadFile/{fileId}")
-    public ResponseEntity<Resource> downloadFile(@PathVariable Long fileId, HttpServletRequest request) {
+    public ResponseEntity<Resource> downloadFile(@PathVariable Long fileId) {
         // Load file as Resource
         DBFile dbFile = fileService.getFile(fileId);
 
@@ -63,5 +69,13 @@ public class FileController {
                 .contentType(MediaType.parseMediaType(dbFile.getFileType()))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + dbFile.getFileName() + "\"")
                 .body(new ByteArrayResource(dbFile.getData()));
+    }
+
+    @GetMapping("/files")
+    public List<UploadFileResponse> getMyFiles() {
+        String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<DBFile> files = fileService.getAllFilesByUsername(username);
+        List<UploadFileResponse> uploadFileResponses = files.stream().map(this::getUploadFileResponse).collect(Collectors.toList());
+        return uploadFileResponses;
     }
 }
