@@ -34,4 +34,8 @@ public class DBFile extends BaseEntity<Long> {
 
     @ManyToOne
     private User user;
+
+    public long getSize() {
+        return data.length;
+    }
 }
