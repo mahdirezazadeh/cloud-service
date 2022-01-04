@@ -39,10 +39,10 @@ public class User extends BaseEntity<Long> {
     @Column(name = LASTNAME, nullable = false)
     private String lastName;
 
-    @Column(name = EMAIL, unique = true, nullable = false)
+    @Column(name = EMAIL, unique = true)
     private String email;
 
-    @Column(name = PHONE_NUMBER, unique = true, nullable = false)
+    @Column(name = PHONE_NUMBER, unique = true)
     private String phoneNumber;
 
     public String getFullName() {
