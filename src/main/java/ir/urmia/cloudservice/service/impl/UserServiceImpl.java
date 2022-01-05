@@ -9,6 +9,7 @@ import ir.urmia.cloudservice.service.UserService;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -17,8 +18,11 @@ import java.util.Optional;
 @EnableCaching
 @Service
 public class UserServiceImpl extends BaseServiceImpl<User, Long, UserRepository> implements UserService {
-    public UserServiceImpl(UserRepository repository) {
+    private final PasswordEncoder passwordEncoder;
+
+    public UserServiceImpl(UserRepository repository, PasswordEncoder passwordEncoder) {
         super(repository);
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -49,6 +53,8 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long, UserRepository>
         if (dbUser.isPresent()) {
             throw new UniqueAttributeAlreadyTakenException("phone number " + user.getPhoneNumber() + " already exist!");
         }
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return save(user);
     }
 }
