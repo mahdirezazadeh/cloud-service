@@ -17,6 +17,7 @@
         <java.version>17</java.version>
         <lombok.version>1.18.20</lombok.version>
         <org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
+        <redis.version>2.6.2</redis.version>
     </properties>
     <dependencies>
 
@@ -25,7 +26,7 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-<!--jdb musql connector-->
+        <!--jdb mysql connector-->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -37,7 +38,7 @@
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
-<!--        junit test-->
+        <!--        junit test-->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
@@ -49,7 +50,7 @@
             <scope>test</scope>
         </dependency>
 
-<!--        apache commons-->
+        <!--        apache commons-->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
@@ -58,16 +59,16 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.6</version>
+            <version>20030203.000550</version>
         </dependency>
-<!--lombok-->
+        <!--lombok-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
 
-<!--spring security-->
+        <!--spring security-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
@@ -96,12 +97,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-cache</artifactId>
-            <version>2.4.3</version>
+            <version>${redis.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
-            <version>2.4.3</version>
+            <version>${redis.version}</version>
         </dependency>
     </dependencies>
 
