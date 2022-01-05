@@ -22,7 +22,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         String password = authentication.getCredentials().toString();
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         if (userDetails.isEnabled()) {
-            if (passwordEncoder.matches(userDetails.getPassword(), password)) {
+            if (passwordEncoder.matches(password, userDetails.getPassword())) {
                 return new UsernamePasswordAuthenticationToken(
                         username,
                         password,
