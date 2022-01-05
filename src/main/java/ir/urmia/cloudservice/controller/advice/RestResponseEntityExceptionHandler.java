@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
@@ -31,6 +32,15 @@ public class RestResponseEntityExceptionHandler
                 ex.getActualSize() +
                 ") exceeds the configured maximum (" +
                 ex.getPermittedSize() + ")";
+        return handleExceptionInternal(ex, bodyOfResponse,
+                new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    }
+
+    @ExceptionHandler(MultipartException.class)
+    protected ResponseEntity<Object> handleMultipart(
+            Exception ex, WebRequest request) {
+
+        String bodyOfResponse = "Current request is not a multipart request";
         return handleExceptionInternal(ex, bodyOfResponse,
                 new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
