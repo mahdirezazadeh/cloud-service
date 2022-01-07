@@ -10,7 +10,9 @@ public interface DBFileService extends BaseService<DBFile, Long> {
 
     DBFile storeFile(MultipartFile file, String username);
 
-    DBFile getFile(Long fileId);
+    DBFile getFile(Long fileId, String username);
 
     List<DBFile> getAllFilesByUsername(String username);
+
+    long getUsedSpaceByUser(String username);
 }

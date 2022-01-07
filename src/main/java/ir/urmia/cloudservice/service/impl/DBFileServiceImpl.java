@@ -48,7 +48,7 @@ public class DBFileServiceImpl extends BaseServiceImpl<DBFile, Long, DBFileRepos
             if (optionalUser.isPresent())
                 user = optionalUser.get();
 
-            DBFile dbFile = new DBFile(fileName, file.getContentType(), file.getBytes(), user);
+            DBFile dbFile = new DBFile(fileName, file.getContentType(), file.getBytes(), file.getSize(), user);
 
             return repository.save(dbFile);
         } catch (IOException ex) {
@@ -58,9 +58,14 @@ public class DBFileServiceImpl extends BaseServiceImpl<DBFile, Long, DBFileRepos
 
     @Override
     @Cacheable(value = "fileCache")
-    public DBFile getFile(Long fileId) {
-        return repository.findById(fileId)
+    public DBFile getFile(Long fileId, String username) {
+        DBFile dbFile = repository.findById(fileId)
                 .orElseThrow(() -> new MyFileNotFoundException("File not found with id " + fileId));
+        if (dbFile.getUser().getUsername().equals(username))
+            return dbFile;
+        else
+            throw new MyFileNotFoundException("File not found with id " + fileId);
+
     }
 
     @Override
@@ -73,5 +78,17 @@ public class DBFileServiceImpl extends BaseServiceImpl<DBFile, Long, DBFileRepos
             user = optionalUser.get();
 
         return repository.findAllByUser(user);
+    }
+
+    @Override
+    public long getUsedSpaceByUser(String username) {
+
+//        get user from database
+        User user = null;
+        Optional<User> optionalUser = userService.findByUsername(username);
+        if (optionalUser.isPresent())
+            user = optionalUser.get();
+
+        return repository.sumOfSizeByUser(user);
     }
 }

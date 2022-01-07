@@ -3,6 +3,7 @@ package ir.urmia.cloudservice.controller;
 import ir.urmia.cloudservice.domain.DBFile;
 import ir.urmia.cloudservice.payload.UploadFileResponse;
 import ir.urmia.cloudservice.service.DBFileService;
+import ir.urmia.cloudservice.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,9 @@ public class FileController {
     @Autowired
     private DBFileService fileService;
 
+    @Autowired
+    private UserService userService;
+
     @PostMapping("/uploadFile")
     public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file) {
 
@@ -44,11 +48,10 @@ public class FileController {
     }
 
     private String getFileDownloadUri(DBFile dbFile) {
-        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+        return ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/downloadFile/")
                 .path(String.valueOf(dbFile.getId()))
                 .toUriString();
-        return fileDownloadUri;
     }
 
 
@@ -62,9 +65,9 @@ public class FileController {
 
     @GetMapping(value = "/downloadFile/{fileId}")
     public ResponseEntity<Resource> downloadFile(@PathVariable Long fileId) {
+        String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         // Load file as Resource
-        DBFile dbFile = fileService.getFile(fileId);
-
+        DBFile dbFile = fileService.getFile(fileId, username);
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(dbFile.getFileType()))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + dbFile.getFileName() + "\"")
@@ -75,7 +78,13 @@ public class FileController {
     public List<UploadFileResponse> getMyFiles() {
         String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<DBFile> files = fileService.getAllFilesByUsername(username);
-        List<UploadFileResponse> uploadFileResponses = files.stream().map(this::getUploadFileResponse).collect(Collectors.toList());
-        return uploadFileResponses;
+        return files.stream().map(this::getUploadFileResponse).collect(Collectors.toList());
+    }
+
+
+    @GetMapping("/allUploudedSizeByUser")
+    public long uploadedSizeByUser() {
+        String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return fileService.getUsedSpaceByUser(username);
     }
 }

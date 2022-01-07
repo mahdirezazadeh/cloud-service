@@ -20,6 +20,7 @@ public class DBFile extends BaseEntity<Long> {
     private final static String FILE_NAME = "file_name";
     private final static String FILE_TYPE = "file_type";
     private final static String DATA = "data";
+    private final static String SIZE = "size";
 
 
     @Column(name = FILE_NAME)
@@ -32,10 +33,9 @@ public class DBFile extends BaseEntity<Long> {
     @Lob
     private byte[] data;
 
+    @Column(name = SIZE)
+    private long size;
+
     @ManyToOne
     private User user;
-
-    public long getSize() {
-        return data.length;
-    }
 }
