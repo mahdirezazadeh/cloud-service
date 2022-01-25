@@ -8,7 +8,7 @@ public class SecurityConstant {
 
     public static String[] getPermitAllUrls() {
         return new String[]{
-                "/login", "/sign-up", "/hey"
+                "/sign-up", "/login-page", "/css/**", "/js/**"
         };
     }
 
