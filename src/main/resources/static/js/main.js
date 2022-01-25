@@ -1,6 +1,5 @@
 $(document).ready(function () {
 
-    let w = $(`#btnBox`);
     let x = $(`#login`);
     let y = $(`#register`);
     let z = $(`#btn`);
@@ -18,15 +17,16 @@ $(document).ready(function () {
             headers: {
                 Authorization: auth
             },
-            success: function (response) {
-                console.log(response);
+            success: function () {
+                $('#error-box').html('');
                 window.location.replace('http://localhost:8080/main');
             },
             error: function () {
-                console.log("error-login")
+                $('#error-box').html('<span class="red">*username or password is wrong!</span>');
             }
         });
     });
+
 
     $('#register-but').click(function () {
         let User_ID = $('#User_ID').val();
@@ -38,6 +38,8 @@ $(document).ready(function () {
 
         let token = $("meta[name='_csrf']").attr("content");
         let header = $("meta[name='_csrf_header']").attr("content");
+
+        let erBox = $('#error-box-s');
 
         let userSignUpDTO = {
             "username": User_ID,
@@ -63,10 +65,20 @@ $(document).ready(function () {
             'success': function (response) {
                 let username = response.username;
                 $('#usernameLogin').val(username);
+                erBox.html('');
                 getLogForm();
             },
             'error': function (error) {
-                console.log(error.responseText);
+
+                erBox.html('')
+                let errors = error.responseText.split('\n');
+
+                for (let i = 0; i < errors.length; i++) {
+                    console.log(errors[i]);
+                    let e = `<span class="red">` + errors[i] + `</span>`;
+                    $('#error-box-s').append(e);
+                }
+                erBox.append(`&nbsp;`);
             }
         });
     });
@@ -75,6 +87,7 @@ $(document).ready(function () {
     $('#register-but-form').click(function () {
         getLogForm();
     });
+
 
     let getLogForm = function () {
         x.css("left", "-400px");
@@ -87,6 +100,7 @@ $(document).ready(function () {
     $('#login-but-form').click(function () {
         getRegForm();
     });
+
 
     let getRegForm = function () {
         x.css("left", "50px");

@@ -39,19 +39,27 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long, UserRepository>
 
     @Override
     public User singUp(User user) {
+        boolean flag = false;
+        String error = "";
         Optional<User> dbUser = repository.findByUsername(user.getUsername());
         if (dbUser.isPresent()) {
-            throw new UniqueAttributeAlreadyTakenException("username " + user.getUsername() + " already exist!");
+            flag = true;
+            error = "username " + user.getUsername() + " already exist!\n";
         }
 
         dbUser = repository.findByEmail(user.getEmail());
         if (dbUser.isPresent()) {
-            throw new UniqueAttributeAlreadyTakenException("email " + user.getEmail() + " already exist!");
+            flag = true;
+            error += "email " + user.getEmail() + " already exist!\n";
         }
 
         dbUser = repository.findByPhoneNumber(user.getPhoneNumber());
         if (dbUser.isPresent()) {
-            throw new UniqueAttributeAlreadyTakenException("phone number " + user.getPhoneNumber() + " already exist!");
+            flag = true;
+            error += "phone number " + user.getPhoneNumber() + " already exist!\n";
+        }
+        if (flag) {
+            throw new UniqueAttributeAlreadyTakenException(error);
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
