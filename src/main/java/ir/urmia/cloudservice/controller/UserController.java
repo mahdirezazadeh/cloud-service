@@ -48,4 +48,10 @@ public class UserController {
         return errors;
     }
 
+    @GetMapping("login")
+    public HttpStatus login() {
+//        SecurityContextHolder.getContext().getAuthentication()
+        return HttpStatus.OK;
+    }
+
 }
