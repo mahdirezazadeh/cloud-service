@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login and Register page</title>
+    <link rel="stylesheet" th:href="@{css/style.css}">
+
+    <script
+            crossorigin="anonymous"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+            src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script language="JavaScript" th:src="@{js/main.js}" type="text/javascript"></script>
+    <meta th:content="${_csrf.token}" th:name="_csrf"/>
+    <meta th:content="${_csrf.headerName}" th:name="_csrf_header"/>
+</head>
+<body>
+<div class="hero">
+    <div class="form-box" id="box">
+        <div class="button-box" id="btnBox">
+            <div id="btn"></div>
+            <button class="toggle-btn" id="login-but-form" type="button">Log in</button>
+            <button class="toggle-btn" id="register-but-form" type="button">Register</button>
+        </div>
+
+        <form class="input-group" id="login">
+            <div id="error-box">
+                <span class="red">username already taken</span>
+            </div>
+            <input class="input-field" id="usernameLogin" placeholder="User ID" required type="text">
+            <input class="input-field" id="passwordLogin" placeholder="Password" required type="text">
+            <input class="check-box" type="checkbox"><span class="span">Remember Password</span>
+            <button class="submit-btn" id="login-but" type="button">Log in</button>
+        </form>
+
+        <form class="input-group" id="register">
+            <div class="error-div" id="error-box-s">
+                <span class="red">username already taken</span>
+                <span class="red">phone number already taken</span>
+                <span class="red">email already taken</span>
+                &nbsp;
+            </div>
+            <input class="input-field" id="User_ID" placeholder="User ID" required type="text">
+            <input class="input-field" id="Email" placeholder="Email" required type="email">
+            <input class="input-field" id="First_Name" placeholder="First Name" required type="text">
+            <input class="input-field" id="Last_Name" placeholder="Last Name" required type="text">
+            <input class="input-field" id="Phone_Number" placeholder="Phone Number" required type="text">
+            <input class="input-field" id="Password_register" placeholder="Password" required type="text">
+            <input class="check-box" type="checkbox"><span class="span">I agree to the terms and conditions.</span>
+            <button class="submit-btn" id="register-but" type="button">Register</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>
