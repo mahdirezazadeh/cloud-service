@@ -4,8 +4,6 @@ import ir.urmia.cloudservice.domain.DBFile;
 import ir.urmia.cloudservice.service.DBFileService;
 import ir.urmia.cloudservice.service.dto.UploadFileDTO;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -21,11 +19,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@CrossOrigin
 @RequiredArgsConstructor
 public class FileController {
-
-    private static final Logger logger = LoggerFactory.getLogger(FileController.class);
 
     private final DBFileService fileService;
 
