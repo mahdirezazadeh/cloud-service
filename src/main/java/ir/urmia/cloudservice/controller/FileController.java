@@ -1,12 +1,11 @@
 package ir.urmia.cloudservice.controller;
 
 import ir.urmia.cloudservice.domain.DBFile;
-import ir.urmia.cloudservice.payload.UploadFileResponse;
 import ir.urmia.cloudservice.service.DBFileService;
-import ir.urmia.cloudservice.service.UserService;
+import ir.urmia.cloudservice.service.dto.UploadFileDTO;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -22,18 +21,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@CrossOrigin
+@RequiredArgsConstructor
 public class FileController {
 
     private static final Logger logger = LoggerFactory.getLogger(FileController.class);
 
-    @Autowired
-    private DBFileService fileService;
-
-    @Autowired
-    private UserService userService;
+    private final DBFileService fileService;
 
     @PostMapping("/uploadFile")
-    public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file) {
+    public UploadFileDTO uploadFile(@RequestParam("file") MultipartFile file) {
 
         String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -42,8 +39,8 @@ public class FileController {
         return getUploadFileResponse(dbFile);
     }
 
-    private UploadFileResponse getUploadFileResponse(DBFile dbFile) {
-        return new UploadFileResponse(dbFile.getFileName(), getFileDownloadUri(dbFile),
+    private UploadFileDTO getUploadFileResponse(DBFile dbFile) {
+        return new UploadFileDTO(dbFile.getFileName(), getFileDownloadUri(dbFile),
                 dbFile.getFileType(), dbFile.getSize());
     }
 
@@ -56,7 +53,7 @@ public class FileController {
 
 
     @PostMapping("/uploadMultipleFiles")
-    public List<UploadFileResponse> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files) {
+    public List<UploadFileDTO> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files) {
         return Arrays.stream(files)
                 .map(this::uploadFile)
                 .collect(Collectors.toList());
@@ -75,7 +72,7 @@ public class FileController {
     }
 
     @GetMapping("/files")
-    public List<UploadFileResponse> getMyFiles() {
+    public List<UploadFileDTO> getMyFiles() {
         String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<DBFile> files = fileService.getAllFilesByUsername(username);
         return files.stream().map(this::getUploadFileResponse).collect(Collectors.toList());
