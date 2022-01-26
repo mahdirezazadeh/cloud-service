@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cloud Server</title>
+    <link rel="stylesheet" th:href="@{css/style.css}">
+
+    <script
+            crossorigin="anonymous"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+            src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script language="JavaScript" th:src="@{js/uploadfile.js}" type="text/javascript"></script>
+
+    <meta th:content="${_csrf.token}" th:name="_csrf"/>
+    <meta th:content="${_csrf.headerName}" th:name="_csrf_header"/>
+</head>
+<body>
+<div class="hero">
+    <div class="form-box" id="box">
+        <form class="input-group" id="upload">
+            <input class="submit-btn" id="files" multiple name="upload" placeholder="browse" required type="file">
+            &nbsp;
+            &nbsp;
+            <button class="submit-btn" id="upload-btn" type="button">upload</button>
+            &nbsp;
+
+            <div class="container ticketA borderradius10px">
+                <dev class="container ticketFromTo">
+
+                <span class="fromTo">fileName
+                </span>
+                </dev>
+
+                <dev class="container ticketPrice">
+                    <div class="container">
+
+                        <span class="fromTo">fileSize
+                        </span>
+                    </div>
+                    <div></div>
+                    <div></div>
+                </dev>
+            </div>
+            <a class="container ticketA borderradius10px">
+                <dev class="container ticketFromTo">
+
+                <span class="fromTo">fileName
+                </span>
+                </dev>
+
+                <dev class="container ticketPrice">
+                    <div class="container">
+
+                        <span class="fromTo">fileSize
+                        </span>
+                    </div>
+                    <div></div>
+                    <div></div>
+                </dev>
+            </a>
+            <a class="container ticketA borderradius10px">
+                <dev class="container ticketFromTo">
+
+                <span class="fromTo">fileName
+                </span>
+                </dev>
+
+                <dev class="container ticketPrice">
+                    <div class="container">
+
+                        <span class="fromTo">fileSize
+                        </span>
+                    </div>
+                    <div></div>
+                    <div></div>
+                </dev>
+            </a>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

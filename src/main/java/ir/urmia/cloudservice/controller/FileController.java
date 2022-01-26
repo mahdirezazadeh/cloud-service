@@ -36,7 +36,7 @@ public class FileController {
 
     private UploadFileDTO getUploadFileResponse(DBFile dbFile) {
         return new UploadFileDTO(dbFile.getFileName(), getFileDownloadUri(dbFile),
-                dbFile.getFileType(), dbFile.getSize());
+                dbFile.getFileType(), dbFile.getSize(), dbFile.getCreateDate());
     }
 
     private String getFileDownloadUri(DBFile dbFile) {

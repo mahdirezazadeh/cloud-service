@@ -14,7 +14,7 @@ $(document).ready(function () {
     };
 
     $.ajax(settings).done(function (response) {
-        console.log(response);
+        addToList(response);
     });
 
     $('#upload-btn').click(function () {
@@ -24,7 +24,7 @@ $(document).ready(function () {
         if (files.length > 0) {
             let form = new FormData();
             for (let i = 0; i < files.length; i++) {
-                console.log(files[i])
+                // console.log(files[i])
                 form.append('files', files[i], files[i].name)
             }
 
@@ -43,9 +43,33 @@ $(document).ready(function () {
                 timeout: 0,
                 data: form,
                 success: function (response) {
-                    console.log(response);
+                    let objects = jQuery.parseJSON(response);
+                    addToList(objects);
                 }
             });
         }
     });
+
+    let addToList = function (response) {
+        let FilesDiv = $('#FilesDiv');
+        console.log(response);
+
+        for (let i = 0; i < response.length; i++) {
+            console.log(response[i])
+            let f_name = response[i].fileName;
+            let f_createDate = response[i].createDate;
+            let f_size = response[i].size;
+            let f_link = response[i].fileDownloadUri;
+
+            FilesDiv.append(
+                `<a class="containerA" href="` + f_link + `">\n` +
+                `    <div class="container container1">\n` +
+                `        <span class="containerSpan">` + f_name + `</span>\n` +
+                `        <span class="containerSpan">` + f_createDate.substring(0, 10) + `</span>\n` +
+                `        <span class="containerSpan">` + Math.floor((f_size / 1024) * 100) / 100 + ` KB</span>\n` +
+                `    </div>\n` +
+                `</a>`
+            )
+        }
+    }
 });
